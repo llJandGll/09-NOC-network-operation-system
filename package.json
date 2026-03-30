@@ -1,5 +1,5 @@
 {
-  "name": "NOC-network-operation-system-PROD",
+  "name": "noc-network-operation-system-prod",
   "private": true,
   "scripts": {
     "build": "turbo run build",
@@ -10,8 +10,7 @@
   },
   "devDependencies": {
     "prettier": "^3.7.4",
-    "turbo": "^2.8.21",
-    "typescript": "5.9.2"
+    "turbo": "^2.8.21"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
