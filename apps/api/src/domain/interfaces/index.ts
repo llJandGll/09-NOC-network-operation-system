@@ -1,2 +1,2 @@
 export * from "./cron";
-export * from "./error";
+export * from "./entities";
