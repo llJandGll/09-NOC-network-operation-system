@@ -10,11 +10,13 @@
     "start": "node dist/server.js"
   },
   "dependencies": {
+    "@repo/noc-shared": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "cron": "^4.4.0",
-    "rimraf": "^6.1.3"
+    "cron": "^4.4.0"
   },
   "devDependencies": {
+    "@types/node": "^25.5.0",
+    "rimraf": "^6.1.3",
     "tsx": "^4.21.0",
     "typescript": "^5.9.2"
   }

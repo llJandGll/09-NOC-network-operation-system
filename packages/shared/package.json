@@ -1,0 +1,24 @@
+{
+  "name": "@repo/noc-shared",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "type": "module",
+  "main": "src/app.ts",
+  "types": "./src/app.ts",
+  "exports": {
+    ".": "./src/app.ts",
+    "./*": "./src/*.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^5.9.2"
+  }
+}
