@@ -1,3 +1,5 @@
+import { CheckUrlUseCaseImpl } from "./domain/use-cases";
+import { CheckUrlRepositoryImpl, CronAdapter } from "./infrastructure";
 import { NocRunner } from "./presentation/cronjob/noc-runner";
 
 (() => {
@@ -7,12 +9,18 @@ import { NocRunner } from "./presentation/cronjob/noc-runner";
 })();
 
 function main() {
-  NocRunner.start({
-    scheduleJob: (cronTime, onTick) => {
-      return {
-        stop: () => {},
-      };
+  const checkUrlRepository = new CheckUrlRepositoryImpl();
+  const checkUrlUseCase = new CheckUrlUseCaseImpl(checkUrlRepository, {
+    onSuccess: () => {
+      console.log("Success");
     },
-    checkUrl: "https://google.com",
+    onError: (error) => {
+      console.log("Error", error);
+    },
+  });
+
+  NocRunner.start({
+    scheduleJob: CronAdapter.createCronJob,
+    checkUrl: checkUrlUseCase.execute,
   });
 }
