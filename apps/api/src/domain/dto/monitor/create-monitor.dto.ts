@@ -7,6 +7,7 @@ export class CreateMonitorDto {
   constructor(
     public readonly url: CreateMonitorSchema["url"],
     public readonly intervalSeconds: CreateMonitorSchema["intervalSeconds"],
+    public readonly startAt?: Date,
   ) {}
 
   static create(data: {
@@ -19,8 +20,8 @@ export class CreateMonitorDto {
       return [message, undefined];
     }
 
-    const { url, intervalSeconds } = result.data;
+    const { url, intervalSeconds, startAt } = result.data;
 
-    return [undefined, new CreateMonitorDto(url, intervalSeconds)];
+    return [undefined, new CreateMonitorDto(url, intervalSeconds, startAt)];
   }
 }

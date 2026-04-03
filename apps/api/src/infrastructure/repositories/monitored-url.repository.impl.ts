@@ -8,15 +8,15 @@ export class MonitoredUrlRepositoryImpl extends MonitoredUrlRepository {
     super();
   }
 
-  save(dto: CreateMonitorDto): Promise<MonitoredUrlEntity> {
-    return this.datasource.save(dto);
+  register(dto: CreateMonitorDto): Promise<MonitoredUrlEntity> {
+    return this.datasource.register(dto);
   }
 
-  findAll(): Promise<MonitoredUrlEntity[]> {
-    return this.datasource.findAll();
+  getAll(): Promise<MonitoredUrlEntity[]> {
+    return this.datasource.getAll();
   }
 
-  delete(idDto: GetIdMonitorDto): Promise<void> {
-    return this.datasource.delete(idDto);
+  unregister(idDto: GetIdMonitorDto): Promise<void> {
+    return this.datasource.unregister(idDto);
   }
 }

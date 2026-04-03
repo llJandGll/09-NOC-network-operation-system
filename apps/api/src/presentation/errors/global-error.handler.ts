@@ -1,6 +1,6 @@
 import type { ErrorRequestHandler } from "express";
 import { HttpError } from "./http.error";
-import { NocError } from "../../domain/errors/noc.error";
+import { NocError } from "../../domain/errors";
 
 /**
  * GlobalErrorHandler — Punto único de manejo de errores de toda la aplicación.

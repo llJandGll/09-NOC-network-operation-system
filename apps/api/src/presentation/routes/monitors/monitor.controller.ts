@@ -3,10 +3,10 @@ import { CreateMonitorDto, GetIdMonitorDto } from "../../../domain/dto";
 import { HttpError } from "../../errors/http.error";
 import {
   ListMonitorsUseCaseImpl,
-  RegisterMonitorUseCaseImpl,
+  CreateMonitorUseCaseImpl,
   UnregisterMonitorUseCaseImpl,
 } from "../../../domain/use-cases";
-import type { MonitoredUrlRepository } from "../../../domain/repositories/monitored-url.repository";
+import type { MonitoredUrlRepository } from "../../../domain/repositories";
 import type { MonitorRegistry } from "../../monitor-registry/monitor-registry";
 
 export class MonitorController {
@@ -23,7 +23,7 @@ export class MonitorController {
     }
 
     try {
-      const monitor = await new RegisterMonitorUseCaseImpl(
+      const monitor = await new CreateMonitorUseCaseImpl(
         this.repository,
       ).execute(dto);
       this.registry.register(monitor);

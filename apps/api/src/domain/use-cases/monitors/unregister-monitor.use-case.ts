@@ -9,6 +9,6 @@ export class UnregisterMonitorUseCaseImpl implements UnregisterMonitorUseCase {
   constructor(private readonly repository: MonitoredUrlRepository) {}
 
   execute(dto: GetIdMonitorDto): Promise<void> {
-    return this.repository.delete(dto);
+    return this.repository.unregister(dto);
   }
 }

@@ -9,6 +9,6 @@ export class ListMonitorsUseCaseImpl implements ListMonitorsUseCase {
   constructor(private readonly repository: MonitoredUrlRepository) {}
 
   execute(): Promise<MonitoredUrlEntity[]> {
-    return this.repository.findAll();
+    return this.repository.getAll();
   }
 }
