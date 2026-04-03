@@ -12,6 +12,7 @@
   "dependencies": {
     "@repo/noc-shared": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@repo/database": "workspace:*",
     "cors": "^2.8.6",
     "cron": "^4.4.0",
     "express": "^5.2.1"
