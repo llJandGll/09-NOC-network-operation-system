@@ -20,8 +20,9 @@ export class Server {
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cors());
 
-    if (AppRouter.router) {
-      this.app.use(AppRouter.router);
+    const routes = AppRouter.router;
+    if (routes) {
+      this.app.use(routes);
     }
 
     // Global error middleware — must be registered last
