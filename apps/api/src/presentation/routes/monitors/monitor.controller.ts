@@ -22,26 +22,18 @@ export class MonitorController {
       throw HttpError.badRequest(error ?? "Error al crear el monitoreo");
     }
 
-    try {
-      const monitor = await new CreateMonitorUseCaseImpl(
-        this.repository,
-      ).execute(dto);
-      this.registry.register(monitor);
-      res.status(201).json({ ok: true, monitor });
-    } catch (err) {
-      throw err;
-    }
+    const monitor = await new CreateMonitorUseCaseImpl(
+      this.repository,
+    ).execute(dto);
+    this.registry.register(monitor);
+    res.status(201).json({ ok: true, monitor });
   };
 
   list = async (_req: Request, res: Response): Promise<void> => {
-    try {
-      const monitors = await new ListMonitorsUseCaseImpl(
-        this.repository,
-      ).execute();
-      res.status(200).json({ ok: true, monitors });
-    } catch (err) {
-      throw err;
-    }
+    const monitors = await new ListMonitorsUseCaseImpl(
+      this.repository,
+    ).execute();
+    res.status(200).json({ ok: true, monitors });
   };
 
   unregister = async (req: Request, res: Response): Promise<void> => {
@@ -51,12 +43,8 @@ export class MonitorController {
       throw HttpError.badRequest(error ?? "Invalid request body");
     }
 
-    try {
-      await new UnregisterMonitorUseCaseImpl(this.repository).execute(dto);
-      this.registry.unregister(dto.id);
-      res.status(200).json({ ok: true });
-    } catch (err) {
-      throw err;
-    }
+    await new UnregisterMonitorUseCaseImpl(this.repository).execute(dto);
+    this.registry.unregister(dto.id);
+    res.status(200).json({ ok: true });
   };
 }

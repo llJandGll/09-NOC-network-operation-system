@@ -7,6 +7,7 @@ import {
 } from "../../../infrastructure";
 import { FileMonitoredUrlDatasourceImpl } from "../../../infrastructure/datasources/monitored-url.datasource.impl";
 import { LogDatasourceImpl } from "../../../infrastructure/datasources/log.datasource.impl";
+import { CheckUrlUseCaseImpl } from "../../../domain/use-cases";
 import { CronAdapter } from "../../../infrastructure/adapters/cron.adapter";
 import { MonitorRegistry } from "../../monitor-registry/monitor-registry";
 import { MonitorController } from "./monitor.controller";
@@ -25,11 +26,13 @@ export class MonitorRoute {
     const monitorRepository = new MonitoredUrlRepositoryImpl(monitorDatasource);
     const logRepository = new LogRepositoryImpl(logDatasource);
 
+    // Use Cases
+    const checkUrlUseCase = new CheckUrlUseCaseImpl(checkUrlRepository, logRepository);
+
     // Registry
     const registry = new MonitorRegistry({
       scheduleJob: CronAdapter.createCronJob,
-      checkUrlRepository,
-      logRepository,
+      checkUrl: (dto) => checkUrlUseCase.execute(dto),
     });
 
     const controller = new MonitorController(monitorRepository, registry);
