@@ -7,10 +7,13 @@ import {
 } from "../../../infrastructure";
 import { FileMonitoredUrlDatasourceImpl } from "../../../infrastructure/datasources/monitored-url.datasource.impl";
 import { LogDatasourceImpl } from "../../../infrastructure/datasources/log.datasource.impl";
-import { CheckUrlUseCaseImpl } from "../../../domain/use-cases";
+import { BrevoMailerAdapter } from "../../../infrastructure/adapters/brevo.adapter";
+import { CheckUrlUseCaseImpl, SendAlertEmailUseCaseImpl } from "../../../domain/use-cases";
 import { CronAdapter } from "../../../infrastructure/adapters/cron.adapter";
 import { MonitorRegistry } from "../../monitor-registry/monitor-registry";
 import { MonitorController } from "./monitor.controller";
+import { alertEmailTemplate } from "../../email-templates/alert.template";
+import { EnvsPlugin } from "../../../../config";
 
 export class MonitorRoute {
   public static route(): Router {
@@ -26,8 +29,25 @@ export class MonitorRoute {
     const monitorRepository = new MonitoredUrlRepositoryImpl(monitorDatasource);
     const logRepository = new LogRepositoryImpl(logDatasource);
 
+    // Mailer
+    const mailer = new BrevoMailerAdapter(EnvsPlugin.getBrevoApiKey(), {
+      email: EnvsPlugin.getBrevoSenderEmail(),
+      name: EnvsPlugin.getBrevoSenderName(),
+    });
+
     // Use Cases
-    const checkUrlUseCase = new CheckUrlUseCaseImpl(checkUrlRepository, logRepository);
+    const checkUrlUseCase = new CheckUrlUseCaseImpl({
+      checkUrlRepository,
+      logRepository,
+      onStatusChange: (url, status, timestamp) => {
+        const htmlContent = alertEmailTemplate({ url, status, timestamp });
+        new SendAlertEmailUseCaseImpl(mailer).execute({
+          to: [{ email: EnvsPlugin.getBrevoSenderEmail() }],
+          subject: `[NOC] ${status}: ${url}`,
+          htmlContent,
+        });
+      },
+    });
 
     // Registry
     const registry = new MonitorRegistry({

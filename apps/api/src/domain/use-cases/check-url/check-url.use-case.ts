@@ -8,14 +8,17 @@ export interface CheckUrlUseCase {
   execute(dto: CheckUrlDto): Promise<boolean>;
 }
 
+interface CheckUrlUseCaseOptions {
+  checkUrlRepository: CheckUrlRepository;
+  logRepository: LogRepository;
+  onStatusChange?: (url: string, status: string, timestamp: Date) => void;
+}
+
 export class CheckUrlUseCaseImpl implements CheckUrlUseCase {
-  constructor(
-    private readonly checkUrlRepository: CheckUrlRepository,
-    private readonly logRepository: LogRepository,
-  ) {}
+  constructor(private readonly options: CheckUrlUseCaseOptions) {}
 
   async execute(dto: CheckUrlDto): Promise<boolean> {
-    const isAlive = await this.checkUrlRepository.checkUrl(dto);
+    const isAlive = await this.options.checkUrlRepository.checkUrl(dto);
     const status = isAlive ? "ALIVE" : "DEAD";
     const level = isAlive ? SeverityLevel.LOW : SeverityLevel.HIGH;
     const log = new LogEntity(
@@ -25,7 +28,12 @@ export class CheckUrlUseCaseImpl implements CheckUrlUseCase {
       new Date(),
       "check-url.use-case.ts",
     );
-    await new SaveLogUseCaseImpl(this.logRepository).execute(log);
+    await new SaveLogUseCaseImpl(this.options.logRepository).execute(log);
+
+    if (!isAlive) {
+      this.options.onStatusChange?.(dto.url, status, new Date());
+    }
+
     return isAlive;
   }
 }
